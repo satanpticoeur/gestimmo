@@ -15,14 +15,7 @@ model Announcement {
   title     String
   description String
   price Int
-  imageUrl Image[]
+  imageUrls   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model Image {
-  id        String   @id @default(cuid())
-  url       String
-  announcementId String
-  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
 }
