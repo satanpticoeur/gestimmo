@@ -15,7 +15,7 @@ import { Pencil, Trash } from "lucide-react";
 export function AnnouncementList({announcements}: {announcements: Announcement[]}) {
   
   return (
-    <Table className="border rounded-md">
+    <Table className="border p-4">
       <TableCaption>A list of your recent announcements.</TableCaption>
       <TableHeader>
         <TableRow>
@@ -29,7 +29,7 @@ export function AnnouncementList({announcements}: {announcements: Announcement[]
         {announcements.map((announcement: Announcement) => (
           <TableRow key={announcement.id}>
             <TableCell >
-              {announcement.imageUrls}
+              {announcement.imageUrl1}
             </TableCell>
             <TableCell className="font-medium">{announcement.title}</TableCell>
             <TableCell>{announcement.price}</TableCell>
