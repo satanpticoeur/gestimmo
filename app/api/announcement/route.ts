@@ -14,15 +14,16 @@ export async function main() {
   }
 }
 
-export async function POST() {
-  //   const { title, description, price, imageUrl } = await request.json();
+export async function POST(request: Request) {
+  const { title, description, price, imageUrls } = await request.json();
+
   await main();
   const announcement = await prisma.announcement.create({
     data: {
-      title: "test",
-      description: "test",
-      price: 100,
-      imageUrls: "image1",
+      title,
+      description,
+      price,
+      imageUrls,
     },
   });
   return NextResponse.json(announcement);
