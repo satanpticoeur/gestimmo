@@ -1,13 +1,27 @@
 import React from "react";
 import { Input } from "../ui/input";
+import { FieldError, UseFormRegisterReturn } from "react-hook-form";
 
-function InputDetail({ label, type }: { label: string, type?: string }) {
+type RegisterType = UseFormRegisterReturn<string>;
+
+function InputDetail({
+  label,
+  type,
+  register,
+  errors,
+}: {
+  label: string;
+  type?: string;
+  register: RegisterType;
+  errors: FieldError | undefined;
+}) {
   return (
     <div className="md:col-span-2 ">
       <label htmlFor={label} className="block text-sm/6 font-medium">
         {label}
       </label>
-      <Input type={type || "text"} />
+      <Input type={type || "text"} {...register} />
+      {errors && <p className="text-red-500">{errors.message}</p>}
     </div>
   );
 }
