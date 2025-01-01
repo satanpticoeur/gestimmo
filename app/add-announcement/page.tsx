@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputMainImg from "@/components/announcement/Input-Main-Img";
+import { useRouter } from "next/navigation";
 
 const imageSchema = yup
   .mixed()
@@ -45,6 +46,7 @@ const announcementSchema = yup.object({
 });
 
 export default function AddAnnouncement() {
+  const router = useRouter();
   const [inputImages, setInputImages] = useState<Array<{ id: string }>>([]);
 
   const handleAddImage = () => {
@@ -68,6 +70,7 @@ export default function AddAnnouncement() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(announcementSchema),
@@ -94,15 +97,16 @@ export default function AddAnnouncement() {
     if (otherImage1File?.[0]) formData.append("otherImage1", otherImage1File[0]);
     if (otherImage2File?.[0]) formData.append("otherImage2", otherImage2File[0]);
 
-    console.log("formData", formData);
-
     const response = await fetch("http://localhost:3000/api/announcement", {
       method: "POST",
       body: formData,
     });
+    
+    if (response.ok) {
+      reset();
+      router.push("/");
+    }
 
-    const announcement = await response.json();
-    console.log("server response", announcement);
   });
 
   return (
