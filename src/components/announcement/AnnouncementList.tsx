@@ -13,6 +13,7 @@ import { Pencil, Trash } from "lucide-react";
 import Image from "next/image";
 
 interface Announcement {
+  id: string;
   title: string;
   description: string;
   price: number;
@@ -21,8 +22,10 @@ interface Announcement {
 
 export function AnnouncementList({
   announcements,
+  onDelete,
 }: {
   announcements: Announcement[];
+  onDelete: (id: string) => void;
 }) {
   return (
     <Table className="border p-4">
@@ -38,7 +41,7 @@ export function AnnouncementList({
       <TableBody>
         {announcements.map((announcement: Announcement, index: number) => (
           <TableRow key={index} className="">
-            <TableCell className="">
+            <TableCell>
               <div className="w-14 h-14 rounded-full overflow-hidden"> 
                 <Image
                   src={announcement.image}
@@ -52,12 +55,18 @@ export function AnnouncementList({
             <TableCell className="font-medium">{announcement.title}</TableCell>
             <TableCell>{announcement.price}</TableCell>
             <TableCell className="text-right">
-              <Button variant="outline">
-                <Pencil />
-              </Button>
-              <Button variant="outline" className=" hover:bg-destructive ml-2">
-                <Trash />
-              </Button>
+              <div className="flex justify-end">
+                <Button variant="outline">
+                  <Pencil />
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="hover:bg-destructive ml-2"
+                  onClick={() => onDelete(announcement.id)}
+                >
+                  <Trash />
+                </Button>
+              </div>
             </TableCell>
           </TableRow>
         ))}

@@ -96,6 +96,7 @@ export async function GET() {
   const announcements = data.map((announcement) => {
     // Retourner un objet pour chaque annonce, même sans image
     return {
+      id: announcement.id,
       title: announcement.title,
       description: announcement.description,
       price: announcement.price,

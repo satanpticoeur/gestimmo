@@ -4,6 +4,7 @@ import { AnnouncementList } from "@/components/announcement/AnnouncementList";
 import { useEffect, useState } from "react";
 
 interface Announcement {
+  id: string;
   title: string;
   description: string;
   price: number;
@@ -29,6 +30,23 @@ export default function Home() {
   useEffect(() => {
     fetchAnnouncements();
   }, []);
+
+  const handleDelete = async (id: string) => {
+    try {
+      // Appel API pour supprimer l'annonce
+      const response = await fetch(`/api/announcement/${id}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        setAnnouncements(announcements.filter(announcement => announcement.id !== id));
+      } else {
+        console.error('Erreur lors de la suppression:', response.statusText);
+      }
+      // Mettre à jour l'état local ou recharger les données
+    } catch (error) {
+      console.error('Erreur lors de la suppression:', error);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -56,7 +74,7 @@ export default function Home() {
 
   return (
     <div >
-      <AnnouncementList announcements={announcements} />
+      <AnnouncementList announcements={announcements} onDelete={handleDelete} />
     </div>
   );
 }
