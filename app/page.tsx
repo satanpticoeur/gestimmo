@@ -1,8 +1,14 @@
 "use client";
 
 import { AnnouncementList } from "@/components/announcement/AnnouncementList";
-import { Announcement } from "@/types/Announcement";
 import { useEffect, useState } from "react";
+
+interface Announcement {
+  title: string;
+  description: string;
+  price: number;
+  image: string;
+}
 
 export default function Home() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);

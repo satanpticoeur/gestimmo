@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import InputDetail from "@/components/announcement/Input-Detail";
 import CTAForm from "@/components/announcement/CTA-Form";
@@ -22,10 +23,7 @@ const imageSchema = yup
     );
     return isValid;
   })
-  .test(
-    "file-size",
-    "L'image est trop volumineuse (max 200 Ko)",
-    (value: any) => {
+  .test("file-size", "L'image est trop volumineuse (max 200 Ko)", (value: any) => {
       if (!value || !value[0]) return true;
       const file = value[0] as File;
       return file.size <= 200 * 1024;
@@ -94,19 +92,20 @@ export default function AddAnnouncement() {
 
     // Ajouter les images si elles existent
     if (mainImageFile?.[0]) formData.append("mainImage", mainImageFile[0]);
-    if (otherImage1File?.[0]) formData.append("otherImage1", otherImage1File[0]);
-    if (otherImage2File?.[0]) formData.append("otherImage2", otherImage2File[0]);
+    if (otherImage1File?.[0])
+      formData.append("otherImage1", otherImage1File[0]);
+    if (otherImage2File?.[0])
+      formData.append("otherImage2", otherImage2File[0]);
 
     const response = await fetch("http://localhost:3000/api/announcement", {
       method: "POST",
       body: formData,
     });
-    
+
     if (response.ok) {
       reset();
       router.push("/");
     }
-
   });
 
   return (

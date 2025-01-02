@@ -92,6 +92,15 @@ export async function POST(request: Request) {
 
 export async function GET() {
   await main();
-  const announcements = await prisma.announcement.findMany();
+  const data = await prisma.announcement.findMany();
+  const announcements = data.map((announcement) => {
+    // Retourner un objet pour chaque annonce, même sans image
+    return {
+      title: announcement.title,
+      description: announcement.description,
+      price: announcement.price,
+      image: announcement.imageUrl1 || announcement.imageUrl2 || announcement.imageUrl3 || "/images/placeholder.png"
+    };
+  });
   return NextResponse.json(announcements);
 }
