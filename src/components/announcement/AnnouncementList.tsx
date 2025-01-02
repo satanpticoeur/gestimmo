@@ -11,6 +11,7 @@ import {
 import { Button } from "../ui/button";
 import { Pencil, Trash } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface Announcement {
   id: string;
@@ -40,35 +41,39 @@ export function AnnouncementList({
       </TableHeader>
       <TableBody>
         {announcements.map((announcement: Announcement, index: number) => (
-          <TableRow key={index} className="">
-            <TableCell>
-              <div className="w-14 h-14 rounded-full overflow-hidden"> 
-                <Image
-                  src={announcement.image}
-                  alt={announcement.title}
-                  width={500}
-                  height={500}
-                  className="object-cover w-full h-full"
-              />
-              </div>
-            </TableCell>
-            <TableCell className="font-medium">{announcement.title}</TableCell>
-            <TableCell>{announcement.price}</TableCell>
-            <TableCell className="text-right">
-              <div className="flex justify-end">
-                <Button variant="outline">
-                  <Pencil />
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="hover:bg-destructive ml-2"
-                  onClick={() => onDelete(announcement.id)}
-                >
-                  <Trash />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
+             <TableRow key={index}>
+              <TableCell>
+                <div className="w-14 h-14 rounded-full overflow-hidden">
+                  <Link href={`/announcements/${announcement.id}`}>
+                    <Image
+                      src={announcement.image}
+                      alt={announcement.title}
+                      width={500}
+                      height={500}
+                      className="object-cover w-full h-full"
+                  />
+                  </Link>
+                </div>
+              </TableCell>
+              <TableCell className="font-medium">
+                {announcement.title}
+              </TableCell>
+              <TableCell>{announcement.price}</TableCell>
+              <TableCell className="text-right">
+                <div className="flex justify-end">
+                  <Button variant="outline">
+                    <Pencil />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="hover:bg-destructive ml-2"
+                    onClick={() => onDelete(announcement.id)}
+                  >
+                    <Trash />
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
         ))}
       </TableBody>
       {/* <TableFooter>
