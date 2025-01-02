@@ -10,24 +10,27 @@ type Params = Promise<{ id: string }>;
 export async function GET(request: Request, segmentData: { params: Params }) {
   const params = await segmentData.params;
   const id = params.id;
-  console.log("GET request received for id:", id);
+  
   const announcement = await prisma.announcement.findUnique({
     where: { id },
   });
-  if (announcement) {
-    const images = [
-      announcement.imageUrl1,
-      announcement.imageUrl2,
-      announcement.imageUrl3,
-    ].filter((image) => image !== undefined && image !== null);
 
-    console.log(images)
+  if (announcement) {
+    // Structurer les images selon leur type
+    const images = {
+      mainImage: announcement.imageUrl1 || null,
+      otherImages: [
+        announcement.imageUrl2,
+        announcement.imageUrl3
+      ].filter(Boolean) // Filtrer les valeurs null/undefined
+    };
+
     return NextResponse.json({ 
       id: announcement.id,
       title: announcement.title,
       description: announcement.description,
       price: announcement.price,
-      images: images.length > 0 ? images : ["/images/placeholder.png"]
+      images
     });
   }
   return NextResponse.json({ error: "Announcement not found" });
@@ -60,13 +63,63 @@ export async function PUT(
   request: Request,
   { params }: { params: { id: string } }
 ) {
+  const formData = await request.formData();
   const id = params.id;
-  const announcement = await prisma.announcement.update({
-    where: { id },
-    data: {
-      title: "test updated",
-      description: "test updated",
-    },
-  });
-  return NextResponse.json(announcement);
+
+  const title = formData.get("title") as string;
+  const description = formData.get("description") as string;
+  const price = Number(formData.get("price"));
+
+  const mainImage = formData.get("mainImage") as File | null;
+  const otherImage1 = formData.get("otherImage1") as File | null;
+  const otherImage2 = formData.get("otherImage2") as File | null;
+
+  let imageUrl1 = null;
+  let imageUrl2 = null;
+  let imageUrl3 = null;
+
+  const uploadDir = path.join(process.cwd(), "public", "uploads");
+
+  try {
+    // Gérer les nouvelles images
+    if (mainImage) {
+      const buffer = Buffer.from(await mainImage.arrayBuffer());
+      const fileName = `${Date.now()}-${mainImage.name.replace(/[^a-zA-Z0-9.-]/g, "-")}`;
+      const filePath = path.join(uploadDir, fileName);
+      fs.writeFileSync(filePath, buffer);
+      imageUrl1 = `/uploads/${fileName}`;
+    }
+    if (otherImage1) {
+      const buffer = Buffer.from(await otherImage1.arrayBuffer());
+      const fileName = `${Date.now()}-${otherImage1.name.replace(/[^a-zA-Z0-9.-]/g, "-")}`;
+      const filePath = path.join(uploadDir, fileName);
+      fs.writeFileSync(filePath, buffer);
+      imageUrl2 = `/uploads/${fileName}`;
+    }
+    if (otherImage2) {
+      const buffer = Buffer.from(await otherImage2.arrayBuffer());
+      const fileName = `${Date.now()}-${otherImage2.name.replace(/[^a-zA-Z0-9.-]/g, "-")}`;
+      const filePath = path.join(uploadDir, fileName);
+      fs.writeFileSync(filePath, buffer);
+      imageUrl3 = `/uploads/${fileName}`;
+    }
+    // Répéter pour otherImage1 et otherImage2
+
+    const announcement = await prisma.announcement.update({
+      where: { id },
+      data: {
+        title,
+        description,
+        price,
+        ...(imageUrl1 && { imageUrl1 }),
+        ...(imageUrl2 && { imageUrl2 }),
+        ...(imageUrl3 && { imageUrl3 }),
+      },
+    });
+
+    return NextResponse.json(announcement);
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: "Update failed" }, { status: 500 });
+  }
 }

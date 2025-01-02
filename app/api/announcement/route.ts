@@ -61,7 +61,7 @@ export async function POST(request: Request) {
       )}`;
       const filePath2 = path.join(uploadDir, fileName2);
       fs.writeFileSync(filePath2, buffer2);
-      imageUrl2 = `${process.env.NEXT_PUBLIC_URL}/uploads/${fileName2}`;
+      imageUrl2 = `/uploads/${fileName2}`;
     }
     if (otherImage2File) {
       const buffer3 = Buffer.from(await otherImage2File?.arrayBuffer()) || null;
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
       )}`;
       const filePath3 = path.join(uploadDir, fileName3);
       fs.writeFileSync(filePath3, buffer3);
-      imageUrl3 = `${process.env.NEXT_PUBLIC_URL}/uploads/${fileName3}`;
+      imageUrl3 = `/uploads/${fileName3}`;
     }
 
     const announcement = await prisma.announcement.create({

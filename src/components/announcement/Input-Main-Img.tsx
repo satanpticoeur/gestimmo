@@ -10,13 +10,13 @@ import {
 
 type InputMainImgProps = UseFormRegisterReturn<string>;
 
-function InputMainImg({
-  register,
-  errors,
-}: {
+interface InputMainImgComponentProps {
   register: InputMainImgProps;
   errors: Merge<FieldError, FieldErrorsImpl<object>> | undefined;
-}) {
+  existingImage?: string;
+}
+
+function InputMainImg({ register, errors, existingImage }: InputMainImgComponentProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);

@@ -2,18 +2,24 @@
 import { ImgCarousel } from '@/components/announcement/ImgCaroussel'
 import React, { use, useEffect, useState } from 'react'
 
-interface Announcement {
+type Announcement = {
   id: string
   title: string
   description: string
   price: number
-  images: string[]
+  images: {
+    mainImage: string | null;
+    otherImages: (string | null)[];
+}
 }
 
 type Params = Promise<{ id: string }> 
 function SingleAnnouncementPage(props : { params: Params }) {
   const params = use(props.params)
-  const [images, setImages] = useState<string[]>([])
+  const [images, setImages] = useState<Announcement['images']>({
+    mainImage: null,
+    otherImages: []
+  })
 
   const [announcement, setAnnouncement] = useState<Announcement | undefined>(undefined)
 
@@ -23,6 +29,7 @@ function SingleAnnouncementPage(props : { params: Params }) {
         const announcement: Announcement = await response.json()
         setAnnouncement(announcement)
         setImages(announcement.images)
+        console.log("announcement", announcement);
       }
     getAnnouncement()
   }, [params.id])

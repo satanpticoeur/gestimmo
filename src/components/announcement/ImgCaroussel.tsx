@@ -23,20 +23,26 @@ interface Announcement {
   title: string;
   description: string;
   price: number;
-  images: string[];
+  images: {
+    mainImage: string | null;
+    otherImages: (string | null)[];
+}   ;
 }
 export function ImgCarousel({
   images,
   announcement,
 }: {
-  images: string[];
+  images: {
+    mainImage: string | null;
+    otherImages: (string | null)[];
+};
   announcement: Announcement | undefined;
 }) {
   const plugin = React.useRef(
     Autoplay({ delay: 5000, stopOnInteraction: false })
   );
   const [api, setApi] = React.useState<CarouselApi>();
-    const [currentImage, setCurrentImage] = React.useState(images[0] || "");
+    const [currentImage, setCurrentImage] = React.useState(images.mainImage || "/images/placeholder.png");
 
     React.useEffect(() => {
         if (!api) return;
@@ -44,7 +50,8 @@ export function ImgCarousel({
         api.on("select", () => {
         // Mettre à jour currentImage avec l'index actuel du carousel
         const selectedIndex = api.selectedScrollSnap();
-        setCurrentImage(images[selectedIndex]);
+        const selectedImage = images.otherImages[selectedIndex] || "/images/placeholder.png";
+        setCurrentImage(selectedImage);
         });
     }, [api, images]);
 
@@ -69,13 +76,13 @@ export function ImgCarousel({
                 setApi={setApi}
             >
                 <CarouselContent>
-                {images.map((image, index) => (
+                {images.otherImages.map((image, index) => (
                     <CarouselItem key={index} className="">
                     <div className="p-1">
                         <Card>
                         <CardContent className="flex aspect-square items-center justify-center p-6">
                             <Image
-                            src={image}
+                            src={image || ""}
                             alt="announcement"
                             width={500}
                             height={500}

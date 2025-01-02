@@ -62,7 +62,9 @@ export function AnnouncementList({
               <TableCell className="text-right">
                 <div className="flex justify-end">
                   <Button variant="outline">
-                    <Pencil />
+                    <Link href={`/announcements/${announcement.id}/edit`}>
+                      <Pencil />
+                    </Link>
                   </Button>
                   <Button
                     variant="outline"
