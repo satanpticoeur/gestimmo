@@ -1,9 +1,7 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  // TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -30,7 +28,6 @@ export function AnnouncementList({
 }) {
   return (
     <Table className="border p-4">
-      <TableCaption>A list of your recent announcements.</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead className="w-14">Image</TableHead>
@@ -40,7 +37,8 @@ export function AnnouncementList({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {announcements.map((announcement: Announcement, index: number) => (
+        {announcements.length > 0 ? ( 
+          announcements.map((announcement: Announcement, index: number) => (
              <TableRow key={index}>
               <TableCell>
                 <div className="w-14 h-14 rounded-full overflow-hidden">
@@ -76,14 +74,15 @@ export function AnnouncementList({
                 </div>
               </TableCell>
             </TableRow>
-        ))}
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={4} className="text-center">
+              No announcements found
+            </TableCell>
+          </TableRow>
+        )}
       </TableBody>
-      {/* <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">$2,500.00</TableCell>
-        </TableRow>
-      </TableFooter> */}
     </Table>
   );
 }

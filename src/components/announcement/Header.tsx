@@ -8,21 +8,18 @@ export default function Header() {
         <h3>
           <Link href="/">
             <code className="p-1 border rounded-md">
-            Gest
-            <span className="text-indigo-600">immo</span>
+              Gest
+              <span className="text-indigo-600">immo</span>
             </code>
           </Link>
         </h3>
         <div className="flex overflow-hidden group">
-          <Button variant="outline">
-            <Link
-              href="/add-announcement"
-              className="flex items-center gap-2 "
-            >
+          <Link href="/add-announcement">
+            <Button variant="outline">
               <span className="font-bold">Add announcement</span>
-              <Plus className="" />
-            </Link>
-          </Button>
+              <Plus />
+            </Button>
+          </Link>
         </div>
       </nav>
     </header>

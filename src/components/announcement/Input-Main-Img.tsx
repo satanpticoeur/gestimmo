@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect  } from "react";
 import { Input } from "../ui/input";
 import Image from "next/image";
 import {
@@ -17,9 +17,13 @@ interface InputMainImgComponentProps {
 }
 
 function InputMainImg({ register, errors, existingImage }: InputMainImgComponentProps) {
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(existingImage || null);
   const [isDragging, setIsDragging] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    setPreviewUrl(existingImage || null);
+  }, [existingImage]);
 
   const handleFiles = (files: FileList) => {
     if (files.length > 0) {
@@ -123,8 +127,8 @@ function InputMainImg({ register, errors, existingImage }: InputMainImgComponent
             <Image
               src={previewUrl}
               alt="Preview"
-              width={100}
-              height={100}
+              width={500}
+              height={500}
               className="w-full h-full object-top object-cover rounded-lg"
             />
             <button

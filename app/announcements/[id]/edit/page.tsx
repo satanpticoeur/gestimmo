@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import InputDetail from "@/components/announcement/Input-Detail";
 import CTAForm from "@/components/announcement/CTA-Form";
@@ -6,55 +5,20 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon, TrashIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputMainImg from "@/components/announcement/Input-Main-Img";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
+import { announcementSchema } from "@/yup/schema";
 
-const imageSchema = yup
-  .mixed()
-  .nullable()
-  .notRequired()
-  .test("is-valid-type", "Le type d'image n'est pas valide", (value: any) => {
-    if (!value || !value[0]) return true;
-    const file = value[0] as File;
-    const isValid = ["image/png", "image/jpeg", "image/jpg"].includes(
-      file.type
-    );
-    return isValid;
-  })
-  .test(
-    "file-size",
-    "L'image est trop volumineuse (max 200 Ko)",
-    (value: any) => {
-      if (!value || !value[0]) return true;
-      const file = value[0] as File;
-      return file.size <= 200 * 1024;
-    }
-  );
-
-const announcementSchema = yup.object({
-  title: yup.string().required("Title is required"),
-  description: yup.string().required("Description is required"),
-  price: yup
-    .number()
-    .transform((value) => (isNaN(value) ? undefined : value))
-    .min(1, "Price must be greater than 0")
-    .required("Price is required"),
-  mainImage: imageSchema,
-  otherImage1: imageSchema,
-  otherImage2: imageSchema,
-});
-
-export default function EditAnnouncement() {
+export default function EditAnnouncementPage() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
   const id = params.id;
   const [inputImages, setInputImages] = useState<Array<{ id: string }>>([]);
   const [existingImages, setExistingImages] = useState({
-    mainImage: '',
-    otherImages: [] as string[]
+    mainImage: "",
+    otherImages: [] as string[],
   });
 
   const {
@@ -69,16 +33,18 @@ export default function EditAnnouncement() {
   useEffect(() => {
     const fetchAnnouncement = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/announcement/${id}`);
+        const response = await fetch(
+          `http://localhost:3000/api/announcement/${id}`
+        );
         const data = await response.json();
-        
-        setValue('title', data.title);
-        setValue('description', data.description);
-        setValue('price', data.price);
+
+        setValue("title", data.title);
+        setValue("description", data.description);
+        setValue("price", data.price);
 
         setExistingImages({
-          mainImage: data.images.mainImage || '',
-          otherImages: data.images.otherImages || []
+          mainImage: data.images.mainImage || "",
+          otherImages: data.images.otherImages || [],
         });
 
         if (data.images.otherImages?.length > 0) {
@@ -89,7 +55,7 @@ export default function EditAnnouncement() {
           );
         }
       } catch (error) {
-        console.error('Erreur lors du chargement de l\'annonce:', error);
+        console.error("Erreur lors du chargement de l'annonce:", error);
       }
     };
 
@@ -117,13 +83,14 @@ export default function EditAnnouncement() {
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    const { title, description, price, mainImage, otherImage1, otherImage2 } = data;
+    const { title, description, price, mainImage, otherImage1, otherImage2 } =
+      data;
     console.log(data);
-    
+
     const mainImageFile = mainImage as FileList;
     const otherImage1File = otherImage1 as FileList;
     const otherImage2File = otherImage2 as FileList;
-    
+
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
@@ -131,14 +98,18 @@ export default function EditAnnouncement() {
 
     // Ajouter les images si elles existent
     if (mainImageFile?.[0]) formData.append("mainImage", mainImageFile[0]);
-    if (otherImage1File?.[0]) formData.append("otherImage1", otherImage1File[0]);
-    if (otherImage2File?.[0]) formData.append("otherImage2", otherImage2File[0]);
+    if (otherImage1File?.[0])
+      formData.append("otherImage1", otherImage1File[0]);
+    if (otherImage2File?.[0])
+      formData.append("otherImage2", otherImage2File[0]);
 
-
-    const response = await fetch(`http://localhost:3000/api/announcement/${id}`, {
-      method: "PUT",
-      body: formData,
-    });
+    const response = await fetch(
+      `http://localhost:3000/api/announcement/${id}`,
+      {
+        method: "PUT",
+        body: formData,
+      }
+    );
 
     if (response.ok) {
       router.push(`/announcements/${id}`);
@@ -176,12 +147,14 @@ export default function EditAnnouncement() {
               errors={errors.price}
             />
           </div>
+
           <div className="flex flex-col gap-4 border-b pb-4 mb-4">
             <InputMainImg
               register={register("mainImage")}
               errors={errors.mainImage}
               existingImage={existingImages.mainImage}
             />
+            {/* Other Images */}
             <div id="other-images" className="flex flex-col gap-4">
               {inputImages.length > 0 &&
                 inputImages.map((image, index) => {
@@ -196,9 +169,9 @@ export default function EditAnnouncement() {
                       >
                         <div className="w-full">
                           {existingImages.otherImages[index] && (
-                            <Image 
-                              src={existingImages.otherImages[index]} 
-                              alt={`Image ${index + 1}`} 
+                            <Image
+                              src={existingImages.otherImages[index]}
+                              alt={`Image ${index + 1}`}
                               width={100}
                               height={100}
                               className="object-cover mb-2"

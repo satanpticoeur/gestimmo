@@ -1,8 +1,6 @@
-import React from "react";
 import { Input } from "../ui/input";
-import { FieldError, UseFormRegisterReturn } from "react-hook-form";
+import { ErrorType, RegisterType } from "@/types/Announcement";
 
-type RegisterType = UseFormRegisterReturn<string>;
 
 function InputDetail({
   label,
@@ -13,7 +11,7 @@ function InputDetail({
   label: string;
   type?: string;
   register: RegisterType;
-  errors: FieldError | undefined;
+  errors: ErrorType;
 }) {
   return (
     <div className="md:col-span-2 ">

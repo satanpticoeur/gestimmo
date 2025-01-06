@@ -16,7 +16,6 @@ export async function GET(request: Request, segmentData: { params: Params }) {
   });
 
   if (announcement) {
-    // Structurer les images selon leur type
     const images = {
       mainImage: announcement.imageUrl1 || null,
       otherImages: [
@@ -38,9 +37,9 @@ export async function GET(request: Request, segmentData: { params: Params }) {
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  segmentData: { params: Params }
 ) {
-  console.log("DELETE request received");
+  const params = await segmentData.params;
   const id = params.id;
   const announcement = await prisma.announcement.delete({
     where: { id },
@@ -61,10 +60,11 @@ export async function DELETE(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  segmentData: { params: Params }
 ) {
-  const formData = await request.formData();
+  const params = await segmentData.params;
   const id = params.id;
+  const formData = await request.formData();
 
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;

@@ -1,3 +1,5 @@
+import { FieldError, UseFormRegisterReturn } from "react-hook-form";
+
 export type Announcement = {
   id: string;
   title: string;
@@ -8,4 +10,8 @@ export type Announcement = {
   imageUrl3?: string;
 };
 
-export type AnnouncementForm = Omit<Announcement, 'id'>;
+
+export type RegisterType = UseFormRegisterReturn<string>;
+
+export type ErrorType = FieldError | undefined;
+

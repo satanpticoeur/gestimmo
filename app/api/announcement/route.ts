@@ -100,7 +100,7 @@ export async function GET() {
       title: announcement.title,
       description: announcement.description,
       price: announcement.price,
-      image: announcement.imageUrl1 || announcement.imageUrl2 || announcement.imageUrl3 || "/images/placeholder.png"
+      image: announcement.imageUrl1 || announcement.imageUrl2 || announcement.imageUrl3
     };
   });
   return NextResponse.json(announcements);
