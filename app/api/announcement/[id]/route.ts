@@ -46,12 +46,17 @@ export async function DELETE(
   });
 
   if (announcement) {
-    const imagePath =
-      announcement.imageUrl1 ||
-      announcement.imageUrl2 ||
-      announcement.imageUrl3;
-    if (imagePath) {
-      fs.unlinkSync(path.join(process.cwd(), "public", imagePath));
+    const imagePath1 = announcement.imageUrl1
+    const imagePath2 = announcement.imageUrl2
+    const imagePath3 = announcement.imageUrl3
+    if (imagePath1) {
+      fs.unlinkSync(path.join(process.cwd(), "public", imagePath1));
+    }
+    if (imagePath2) {
+      fs.unlinkSync(path.join(process.cwd(), "public", imagePath2));
+    }
+    if (imagePath3) {
+      fs.unlinkSync(path.join(process.cwd(), "public", imagePath3));
     }
   }
 

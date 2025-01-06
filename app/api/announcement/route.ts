@@ -4,17 +4,6 @@ import path from "path";
 import fs from "fs";
 const prisma = new PrismaClient();
 
-export async function main() {
-  try {
-    await prisma.$connect();
-    console.log("Connected to database");
-  } catch (error) {
-    console.log(error);
-    await prisma.$disconnect();
-    process.exit(1);
-  }
-}
-
 export async function POST(request: Request) {
   const formData = await request.formData();
   console.log("formData", formData);
@@ -41,7 +30,6 @@ export async function POST(request: Request) {
   let imageUrl2 = null;
   let imageUrl3 = null;
 
-  await main();
   try {
     if (mainImageFile) {
       const buffer1 = Buffer.from(await mainImageFile?.arrayBuffer()) || null;
@@ -91,7 +79,6 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-  await main();
   const data = await prisma.announcement.findMany();
   const announcements = data.map((announcement) => {
     // Retourner un objet pour chaque annonce, même sans image
