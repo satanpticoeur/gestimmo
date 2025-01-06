@@ -13,30 +13,30 @@ export async function connect() {
     }
   }
 
-export const EDIT = async (id: string) => {
-    await connect()
-    const announcement = await prisma.announcement.findUnique({
-      where: { id },
-    });
+// export const EDIT = async (id: string) => {
+//     await connect()
+//     const announcement = await prisma.announcement.findUnique({
+//       where: { id },
+//     });
 
-    if (announcement) {
-      const images = [
-        `/oploads/${announcement.imageUrl1?.split("/uploads/")[1]}`,
-        `/oploads/${announcement.imageUrl2?.split("/uploads/")[1]}`,
-        `/oploads/${announcement.imageUrl3?.split("/uploads/")[1]}`,
-      ].filter((image) => image !== undefined && image !== null);
+//     if (announcement) {
+//       const images = [
+//         `/oploads/${announcement.imageUrl1?.split("/uploads/")[1]}`,
+//         `/oploads/${announcement.imageUrl2?.split("/uploads/")[1]}`,
+//         `/oploads/${announcement.imageUrl3?.split("/uploads/")[1]}`,
+//       ].filter((image) => image !== undefined && image !== null);
 
-      const data = {
-        title: announcement.title,
-        description: announcement.description,
-        price: announcement.price,
-        mainImage: images.length > 0 ? images[0] : null,
-        otherImage1: images.length > 1 ? images[1] : null,
-        otherImage2: images.length > 2 ? images[2] : null,
-      }
+//       const data = {
+//         title: announcement.title,
+//         description: announcement.description,
+//         price: announcement.price,
+//         mainImage: images.length > 0 ? images[0] : null,
+//         otherImage1: images.length > 1 ? images[1] : null,
+//         otherImage2: images.length > 2 ? images[2] : null,
+//       }
 
-      console.log("from prisma", data)
+//       console.log("from prisma", data)
 
-      return data
-    }
-  };
+//       return data
+//     }
+//   };

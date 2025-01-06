@@ -1,9 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import path from "path";
 import fs from "fs";
-
-const prisma = new PrismaClient();
 
 type Params = Promise<{ id: string }>;
 
@@ -17,11 +15,8 @@ export async function GET(request: Request, segmentData: { params: Params }) {
 
   if (announcement) {
     const images = {
-      mainImage: announcement.imageUrl1 || null,
-      otherImages: [
-        announcement.imageUrl2,
-        announcement.imageUrl3
-      ].filter(Boolean) // Filtrer les valeurs null/undefined
+      mainImage: announcement.images[0] || null,
+      otherImages: announcement.images.slice(1) || []
     };
 
     return NextResponse.json({ 
