@@ -57,7 +57,7 @@ export async function GET() {
       title: announcement.title,
       description: announcement.description,
       price: announcement.price,
-      image: announcement. || announcement.imageUrl2 || announcement.imageUrl3
+      image: announcement.images[0] || announcement.images[1] || announcement.images[2] || null
     };
   });
   return NextResponse.json(announcements);

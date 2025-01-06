@@ -41,9 +41,9 @@ export async function DELETE(
   });
 
   if (announcement) {
-    const imagePath1 = announcement.imageUrl1
-    const imagePath2 = announcement.imageUrl2
-    const imagePath3 = announcement.imageUrl3
+    const imagePath1 = announcement.images[0]
+    const imagePath2 = announcement.images[1]
+    const imagePath3 = announcement.images[2]
     if (imagePath1) {
       fs.unlinkSync(path.join(process.cwd(), "public", imagePath1));
     }
@@ -103,7 +103,6 @@ export async function PUT(
       fs.writeFileSync(filePath, buffer);
       imageUrl3 = `/uploads/${fileName}`;
     }
-    // Répéter pour otherImage1 et otherImage2
 
     const announcement = await prisma.announcement.update({
       where: { id },
@@ -111,9 +110,7 @@ export async function PUT(
         title,
         description,
         price,
-        ...(imageUrl1 && { imageUrl1 }),
-        ...(imageUrl2 && { imageUrl2 }),
-        ...(imageUrl3 && { imageUrl3 }),
+        images: [imageUrl1, imageUrl2, imageUrl3].filter(Boolean) as string[],
       },
     });
 
