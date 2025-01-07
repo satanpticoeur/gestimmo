@@ -61,7 +61,7 @@ export default function AddAnnouncementPage() {
     if (otherImage2File?.[0])
       formData.append("otherImage2", otherImage2File[0]);
 
-    const response = await fetch("http://localhost:3000/api/announcement", {
+    const response = await fetch("/api/announcement", {
       method: "POST",
       body: formData,
     });
@@ -69,6 +69,8 @@ export default function AddAnnouncementPage() {
     if (response.ok) {
       reset();
       router.push("/");
+    } else {
+      console.error("Erreur lors de la création de l'annonce");
     }
   });
 
