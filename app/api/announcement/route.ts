@@ -29,7 +29,7 @@ export async function POST(request: Request) {
         const fileName = `${Date.now()}-${image.name.replace(/[^a-zA-Z0-9.-]/g, "-")}`;
         const filePath = path.join(uploadDir, fileName);
         fs.writeFileSync(filePath, buffer);
-        images.push(`/public/uploads/${fileName}`);
+        images.push(`/uploads/${fileName}`);
       }
     }
 
