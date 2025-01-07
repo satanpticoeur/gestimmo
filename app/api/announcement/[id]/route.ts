@@ -103,14 +103,14 @@ export async function PUT(
       fs.writeFileSync(filePath, buffer);
       imageUrl3 = `/uploads/${fileName}`;
     }
-
+    const images = [imageUrl1, imageUrl2, imageUrl3].filter(Boolean) as string[];
     const announcement = await prisma.announcement.update({
       where: { id },
       data: {
         title,
         description,
         price,
-        images: [imageUrl1, imageUrl2, imageUrl3].filter(Boolean) as string[],
+        images,
       },
     });
 
