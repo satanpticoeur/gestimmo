@@ -10,6 +10,7 @@ import { Button } from "../ui/button";
 import { Pencil, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import Modal from "./Modal";
 
 interface Announcement {
   id: string;
@@ -37,9 +38,9 @@ export function AnnouncementList({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {announcements.length > 0 ? ( 
+        {announcements.length > 0 ? (
           announcements.map((announcement: Announcement, index: number) => (
-             <TableRow key={index}>
+            <TableRow key={index}>
               <TableCell>
                 <div className="w-14 h-14 rounded-full overflow-hidden">
                   <Link href={`/announcements/${announcement.id}`}>
@@ -49,28 +50,30 @@ export function AnnouncementList({
                       width={500}
                       height={500}
                       className="object-cover w-full h-full"
-                  />
+                    />
                   </Link>
                 </div>
               </TableCell>
-              <TableCell className="font-medium">
+              <TableCell className="font-medium flex-1">
                 {announcement.title}
               </TableCell>
               <TableCell>{announcement.price}</TableCell>
               <TableCell className="text-right">
-                <div className="flex justify-end">
+                <div className="flex justify-end gap-2">
+                  <Modal />
+
                   <Button variant="outline">
                     <Link href={`/announcements/${announcement.id}/edit`}>
                       <Pencil />
                     </Link>
                   </Button>
-                  <Button
+                  {/* <Button
                     variant="outline"
                     className="hover:bg-destructive ml-2"
                     onClick={() => onDelete(announcement.id)}
                   >
                     <Trash />
-                  </Button>
+                  </Button> */}
                 </div>
               </TableCell>
             </TableRow>

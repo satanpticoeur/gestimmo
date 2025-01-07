@@ -32,20 +32,21 @@ export default function Home() {
   }, []);
 
   const handleDelete = async (id: string) => {
-    try {
-      // Appel API pour supprimer l'annonce
-      const response = await fetch(`/api/announcement/${id}`, {
-        method: 'DELETE',
-      });
-      if (response.ok) {
-        setAnnouncements(announcements.filter(announcement => announcement.id !== id));
-      } else {
-        console.error('Erreur lors de la suppression:', response.statusText);
-      }
-      // Mettre à jour l'état local ou recharger les données
-    } catch (error) {
-      console.error('Erreur lors de la suppression:', error);
-    }
+    // try {
+    //   // Appel API pour supprimer l'annonce
+    //   const response = await fetch(`/api/announcement/${id}`, {
+    //     method: 'DELETE',
+    //   });
+    //   if (response.ok) {
+    //     setAnnouncements(announcements.filter(announcement => announcement.id !== id));
+    //   } else {
+    //     console.error('Erreur lors de la suppression:', response.statusText);
+    //   }
+    //   // Mettre à jour l'état local ou recharger les données
+    // } catch (error) {
+    //   console.error('Erreur lors de la suppression:', error);
+    // }
+    confirm("Suppression de l'annonce" + id);
   };
 
   if (isLoading) {
@@ -73,7 +74,7 @@ export default function Home() {
 }
 
   return (
-    <div >
+    <div className="w-full">
       <AnnouncementList announcements={announcements} onDelete={handleDelete} />
     </div>
   );
