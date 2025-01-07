@@ -34,7 +34,7 @@ export default function EditAnnouncementPage() {
     const fetchAnnouncement = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/announcement/${id}`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/announcement/${id}`
         );
         const data = await response.json();
 
@@ -104,7 +104,7 @@ export default function EditAnnouncementPage() {
       formData.append("otherImage2", otherImage2File[0]);
 
     const response = await fetch(
-      `http://localhost:3000/api/announcement/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/announcement/${id}`,
       {
         method: "PUT",
         body: formData,

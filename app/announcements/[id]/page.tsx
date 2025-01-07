@@ -25,12 +25,13 @@ function SingleAnnouncementPage(props : { params: Params }) {
 
   useEffect(() => {
     const getAnnouncement = async () => { 
-        const response = await fetch(`/api/announcement/${params.id}`)
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+        const response = await fetch(`${baseUrl}/api/announcement/${params.id}`)
         const announcement: Announcement = await response.json()
         setAnnouncement(announcement)
         setImages(announcement.images)
         console.log("announcement", announcement);
-      }
+        }
     getAnnouncement()
   }, [params.id])
   if (!announcement) return <div>Loading...</div>

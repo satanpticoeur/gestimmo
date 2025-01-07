@@ -61,10 +61,13 @@ export default function AddAnnouncementPage() {
     if (otherImage2File?.[0])
       formData.append("otherImage2", otherImage2File[0]);
 
-    const response = await fetch("/api/announcement", {
-      method: "POST",
-      body: formData,
-    });
+    const response = await fetch(
+      process.env.NEXT_PUBLIC_API_URL + "/api/announcement",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
 
     if (response.ok) {
       reset();
