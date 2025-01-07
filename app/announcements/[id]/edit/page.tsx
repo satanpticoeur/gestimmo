@@ -111,7 +111,6 @@ export default function EditAnnouncementPage(props: { params: Params }) {
         method: "PUT",
         body: formData,
       });
-      console.log(response);
       
       if (response.ok) {
         router.push(`/announcements/${params.id}`);
