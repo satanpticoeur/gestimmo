@@ -3,19 +3,21 @@ import InputDetail from "@/components/announcement/Input-Detail";
 import CTAForm from "@/components/announcement/CTA-Form";
 import { Button } from "@/components/ui/button";
 import { PlusIcon, TrashIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputMainImg from "@/components/announcement/Input-Main-Img";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { announcementSchema } from "@/yup/schema";
 import { baseUrl } from "@/lib/constants";
 
-export default function EditAnnouncementPage() {
+type Params = Promise<{ id: string }> 
+
+export default function EditAnnouncementPage(props: { params: Params }) {
   const router = useRouter();
-  const params = useParams<{ id: string }>();
-  const id = params.id;
+  const params = use(props.params);
+
   const [inputImages, setInputImages] = useState<Array<{ id: string }>>([]);
   const [existingImages, setExistingImages] = useState({
     mainImage: "",
@@ -35,7 +37,7 @@ export default function EditAnnouncementPage() {
     const fetchAnnouncement = async () => {
       try {
         const response = await fetch(
-          `${baseUrl}/api/announcement/${id}`
+          `${baseUrl}/api/announcement/${params.id}`
         );
         const data = await response.json();
         console.log(data);
@@ -61,10 +63,10 @@ export default function EditAnnouncementPage() {
       }
     };
 
-    if (id) {
+    if (params.id) {
       fetchAnnouncement();
     }
-  }, [id, setValue]);
+  }, [params.id, setValue]);
 
   const handleAddImage = () => {
     const otherImages = document.getElementById("other-images");
@@ -106,7 +108,7 @@ export default function EditAnnouncementPage() {
       formData.append("otherImage2", otherImage2File[0]);
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/announcement/${id}`,
+      `${baseUrl}/api/announcement/${params.id}`,
       {
         method: "PUT",
         body: formData,
@@ -114,7 +116,7 @@ export default function EditAnnouncementPage() {
     );
 
     if (response.ok) {
-      router.push(`/announcements/${id}`);
+      router.push(`/announcements/${params.id}`);
     }
   });
 

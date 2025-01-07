@@ -60,14 +60,12 @@ export function AnnouncementList({
               <TableCell>{announcement.price}</TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
-
-                  <Button variant="outline">
-                    <Link href={`/announcements/${announcement.id}/edit`}>
+                  <Link href={`/announcements/${announcement.id}/edit`}>
+                    <Button variant="outline">
                       <Pencil />
-                    </Link>
-                  </Button>
+                    </Button>
+                  </Link>
                   <Modal onDelete={() => onDelete(announcement.id)} />
-
                 </div>
               </TableCell>
             </TableRow>
