@@ -37,6 +37,7 @@ export default function EditAnnouncementPage() {
           `${process.env.NEXT_PUBLIC_API_URL}/api/announcement/${id}`
         );
         const data = await response.json();
+        console.log(data);
 
         setValue("title", data.title);
         setValue("description", data.description);
