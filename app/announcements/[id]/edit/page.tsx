@@ -10,7 +10,6 @@ import InputMainImg from "@/components/announcement/Input-Main-Img";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { announcementSchema } from "@/yup/schema";
-import { baseUrl } from "@/lib/constants";
 
 type Params = Promise<{ id: string }>;
 
@@ -107,6 +106,7 @@ export default function EditAnnouncementPage(props: { params: Params }) {
       formData.append("otherImage2", otherImage2File[0]);
 
     try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
       const response = await fetch(`${baseUrl}/api/announcement/${params.id}`, {
         method: "PUT",
         body: formData,
