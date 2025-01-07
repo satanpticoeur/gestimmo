@@ -38,6 +38,8 @@ export default function EditAnnouncementPage(props: { params: Params }) {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
         const response = await fetch(`${baseUrl}/api/announcement/${params.id}`)
         const data = await response.json();
+        console.log("response", response);
+        console.log("data", data);
 
         setValue("title", data.title);
         setValue("description", data.description);
