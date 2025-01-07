@@ -10,6 +10,7 @@ import InputMainImg from "@/components/announcement/Input-Main-Img";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { announcementSchema } from "@/yup/schema";
+import { baseUrl } from "@/lib/constants";
 
 export default function EditAnnouncementPage() {
   const router = useRouter();
@@ -34,7 +35,7 @@ export default function EditAnnouncementPage() {
     const fetchAnnouncement = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/announcement/${id}`
+          `${baseUrl}/api/announcement/${id}`
         );
         const data = await response.json();
         console.log(data);
