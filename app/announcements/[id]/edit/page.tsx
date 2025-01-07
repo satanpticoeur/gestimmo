@@ -36,6 +36,7 @@ export default function EditAnnouncementPage(props: { params: Params }) {
   useEffect(() => {
     const fetchAnnouncement = async () => {
       try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
         const response = await fetch(`${baseUrl}/api/announcement/${params.id}`)
         const data = await response.json();
         console.log(response);
@@ -45,24 +46,25 @@ export default function EditAnnouncementPage(props: { params: Params }) {
         setValue("description", data.description);
         setValue("price", data.price);
 
-        // setExistingImages({
-        //   mainImage: data.images.mainImage || "",
-        //   otherImages: data.images.otherImages || [],
-        // });
+        setExistingImages({
+          mainImage: data.images.mainImage || "",
+          otherImages: data.images.otherImages || [],
+        });
 
-        // if (data.images.otherImages?.length > 0) {
-        //   setInputImages(
-        //     data.images.otherImages.map(() => ({
-        //       id: crypto.randomUUID(),
-        //     }))
-        //   );
-        // }
+        if (data.images.otherImages?.length > 0) {
+          setInputImages(
+            data.images.otherImages.map(() => ({
+              id: crypto.randomUUID(),
+            }))
+          );
+        }
       } catch (error) {
         console.error("Erreur lors du chargement de l'annonce:", error);
       }
     };
 
     if (params.id) {
+      console.log("fetching", params.id);
       fetchAnnouncement();
     }
   }, [params.id, setValue]);

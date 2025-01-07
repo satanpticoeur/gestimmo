@@ -1,6 +1,5 @@
 'use client'
 import { ImgCarousel } from '@/components/announcement/ImgCaroussel'
-import { baseUrl } from '@/lib/constants'
 import React, { use, useEffect, useState } from 'react'
 
 type Announcement = {
@@ -26,6 +25,7 @@ function SingleAnnouncementPage(props : { params: Params }) {
 
   useEffect(() => {
     const getAnnouncement = async () => { 
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
         const response = await fetch(`${baseUrl}/api/announcement/${params.id}`)
         const announcement: Announcement = await response.json()
         setAnnouncement(announcement)
