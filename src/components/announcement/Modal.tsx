@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog"
 import { Trash } from "lucide-react"
 
-export default function Modal() {
+export default function Modal({ onDelete }: { onDelete: () => void }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -33,9 +33,9 @@ export default function Modal() {
               Annuler
             </Button>
           </DialogClose>
-          <Button type="button" variant="destructive">
-              Supprimer
-            </Button>
+          <Button type="button" variant="destructive" onClick={onDelete}>
+            Supprimer
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

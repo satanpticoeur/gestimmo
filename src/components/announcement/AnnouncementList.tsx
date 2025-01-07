@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
-import { Pencil, Trash } from "lucide-react";
+import { Pencil } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Modal from "./Modal";
@@ -60,20 +60,14 @@ export function AnnouncementList({
               <TableCell>{announcement.price}</TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
-                  <Modal />
 
                   <Button variant="outline">
                     <Link href={`/announcements/${announcement.id}/edit`}>
                       <Pencil />
                     </Link>
                   </Button>
-                  {/* <Button
-                    variant="outline"
-                    className="hover:bg-destructive ml-2"
-                    onClick={() => onDelete(announcement.id)}
-                  >
-                    <Trash />
-                  </Button> */}
+                  <Modal onDelete={() => onDelete(announcement.id)} />
+
                 </div>
               </TableCell>
             </TableRow>
