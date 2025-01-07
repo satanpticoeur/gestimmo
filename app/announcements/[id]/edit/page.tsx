@@ -39,8 +39,6 @@ export default function EditAnnouncementPage(props: { params: Params }) {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
         const response = await fetch(`${baseUrl}/api/announcement/${params.id}`)
         const data = await response.json();
-        console.log(response);
-        console.log(data);
 
         setValue("title", data.title);
         setValue("description", data.description);
@@ -108,13 +106,20 @@ export default function EditAnnouncementPage(props: { params: Params }) {
     if (otherImage2File?.[0])
       formData.append("otherImage2", otherImage2File[0]);
 
-    const response = await fetch(`${baseUrl}/api/announcement/${params.id}`, {
-      method: "PUT",
-      body: formData,
-    });
-
-    if (response.ok) {
-      router.push(`/announcements/${params.id}`);
+    try {
+      const response = await fetch(`${baseUrl}/api/announcement/${params.id}`, {
+        method: "PUT",
+        body: formData,
+      });
+      console.log(response);
+      
+      if (response.ok) {
+        router.push(`/announcements/${params.id}`);
+      } else {
+        console.error("Erreur lors de la mise à jour de l'annonce:", response);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour de l'annonce:", error);
     }
   });
 
