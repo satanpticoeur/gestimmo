@@ -12,7 +12,7 @@ import Image from "next/image";
 import { announcementSchema } from "@/yup/schema";
 import { baseUrl } from "@/lib/constants";
 
-type Params = Promise<{ id: string }> 
+type Params = Promise<{ id: string }>;
 
 export default function EditAnnouncementPage(props: { params: Params }) {
   const router = useRouter();
@@ -36,9 +36,7 @@ export default function EditAnnouncementPage(props: { params: Params }) {
   useEffect(() => {
     const fetchAnnouncement = async () => {
       try {
-        const response = await fetch(
-          `${baseUrl}/api/announcement/${params.id}`
-        );
+        const response = await fetch(`${baseUrl}/api/announcement/${params.id}`)
         const data = await response.json();
         console.log(data);
 
@@ -107,13 +105,10 @@ export default function EditAnnouncementPage(props: { params: Params }) {
     if (otherImage2File?.[0])
       formData.append("otherImage2", otherImage2File[0]);
 
-    const response = await fetch(
-      `${baseUrl}/api/announcement/${params.id}`,
-      {
-        method: "PUT",
-        body: formData,
-      }
-    );
+    const response = await fetch(`${baseUrl}/api/announcement/${params.id}`, {
+      method: "PUT",
+      body: formData,
+    });
 
     if (response.ok) {
       router.push(`/announcements/${params.id}`);
