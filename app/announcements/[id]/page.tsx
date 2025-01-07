@@ -25,8 +25,7 @@ function SingleAnnouncementPage(props : { params: Params }) {
 
   useEffect(() => {
     const getAnnouncement = async () => { 
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
-        const response = await fetch(`${baseUrl}/api/announcement/${params.id}`)
+        const response = await fetch(`/api/announcement/${params.id}`)
         const announcement: Announcement = await response.json()
         setAnnouncement(announcement)
         setImages(announcement.images)

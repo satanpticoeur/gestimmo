@@ -17,9 +17,7 @@ export default function Home() {
 
   const fetchAnnouncements = async () => {
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
-      console.log("baseUrl", baseUrl);
-      const response = await fetch(`${baseUrl}/api/announcement`);
+      const response = await fetch(`/api/announcement`);
       const data = await response.json();
       setAnnouncements(data);
     } catch (error) {

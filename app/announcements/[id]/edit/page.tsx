@@ -35,8 +35,7 @@ export default function EditAnnouncementPage(props: { params: Params }) {
   useEffect(() => {
     const fetchAnnouncement = async () => {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
-        const response = await fetch(`${baseUrl}/api/announcement/${params.id}`)
+        const response = await fetch(`/api/announcement/${params.id}`)
         const data = await response.json();
         console.log("response", response);
         console.log("data", data);
@@ -108,8 +107,7 @@ export default function EditAnnouncementPage(props: { params: Params }) {
       formData.append("otherImage2", otherImage2File[0]);
 
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
-      const response = await fetch(`${baseUrl}/api/announcement/${params.id}`, {
+      const response = await fetch(`/api/announcement/${params.id}`, {
         method: "PUT",
         body: formData,
       });
