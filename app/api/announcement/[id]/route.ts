@@ -1,14 +1,13 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import path from "path";
-import fs from "fs";
+import { deleteImageFromBlob, uploadImageToBlob } from "@/lib/blob";
 
 type Params = Promise<{ id: string }>;
 
 export async function GET(request: Request, segmentData: { params: Params }) {
   const params = await segmentData.params;
   const id = params.id;
-  
+
   const announcement = await prisma.announcement.findUnique({
     where: { id },
   });
@@ -16,15 +15,15 @@ export async function GET(request: Request, segmentData: { params: Params }) {
   if (announcement) {
     const images = {
       mainImage: announcement.images[0] || null,
-      otherImages: announcement.images.slice(1) || []
+      otherImages: announcement.images.slice(1) || [],
     };
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       id: announcement.id,
       title: announcement.title,
       description: announcement.description,
       price: announcement.price,
-      images
+      images,
     });
   }
   return NextResponse.json({ error: "Announcement not found" });
@@ -36,32 +35,25 @@ export async function DELETE(
 ) {
   const params = await segmentData.params;
   const id = params.id;
-  const announcement = await prisma.announcement.delete({
+  const existingAnnouncement = await prisma.announcement.findUnique({
     where: { id },
   });
 
-  if (announcement) {
-    const imagePath1 = announcement.images[0]
-    const imagePath2 = announcement.images[1]
-    const imagePath3 = announcement.images[2]
-    if (imagePath1) {
-      fs.unlinkSync(path.join(process.cwd(), "public", imagePath1));
+  if (existingAnnouncement) {
+    for (const image of existingAnnouncement.images) {
+      if (image) {
+        await deleteImageFromBlob(image);
+      }
     }
-    if (imagePath2) {
-      fs.unlinkSync(path.join(process.cwd(), "public", imagePath2));
-    }
-    if (imagePath3) {
-      fs.unlinkSync(path.join(process.cwd(), "public", imagePath3));
-    }
+    await prisma.announcement.delete({
+      where: { id },
+    });
   }
 
-  return NextResponse.json(announcement);
+  return NextResponse.json({ message: "Announcement deleted" });
 }
 
-export async function PUT(
-  request: Request,
-  segmentData: { params: Params }
-) {
+export async function PUT(request: Request, segmentData: { params: Params }) {
   const params = await segmentData.params;
   const id = params.id;
   const formData = await request.formData();
@@ -70,51 +62,49 @@ export async function PUT(
   const description = formData.get("description") as string;
   const price = Number(formData.get("price"));
 
+  //new images
   const mainImage = formData.get("mainImage") as File | null;
   const otherImage1 = formData.get("otherImage1") as File | null;
   const otherImage2 = formData.get("otherImage2") as File | null;
 
-  let imageUrl1 = null;
-  let imageUrl2 = null;
-  let imageUrl3 = null;
-
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-
   try {
-    // Gérer les nouvelles images
-    if (mainImage) {
-      const buffer = Buffer.from(await mainImage.arrayBuffer());
-      const fileName = `${Date.now()}-${mainImage.name.replace(/[^a-zA-Z0-9.-]/g, "-")}`;
-      const filePath = path.join(uploadDir, fileName);
-      fs.writeFileSync(filePath, buffer);
-      imageUrl1 = `/uploads/${fileName}`;
-    }
-    if (otherImage1) {
-      const buffer = Buffer.from(await otherImage1.arrayBuffer());
-      const fileName = `${Date.now()}-${otherImage1.name.replace(/[^a-zA-Z0-9.-]/g, "-")}`;
-      const filePath = path.join(uploadDir, fileName);
-      fs.writeFileSync(filePath, buffer);
-      imageUrl2 = `/uploads/${fileName}`;
-    }
-    if (otherImage2) {
-      const buffer = Buffer.from(await otherImage2.arrayBuffer());
-      const fileName = `${Date.now()}-${otherImage2.name.replace(/[^a-zA-Z0-9.-]/g, "-")}`;
-      const filePath = path.join(uploadDir, fileName);
-      fs.writeFileSync(filePath, buffer);
-      imageUrl3 = `/uploads/${fileName}`;
-    }
-    const images = [imageUrl1, imageUrl2, imageUrl3].filter(Boolean) as string[];
-    const announcement = await prisma.announcement.update({
+    const existingAnnouncement = await prisma.announcement.findUnique({
       where: { id },
-      data: {
-        title,
-        description,
-        price,
-        images,
+      select: {
+        images: true,
       },
     });
+    //new images array
+    const newImages: string[] = [];
 
-    return NextResponse.json(announcement);
+    if (existingAnnouncement) {
+      //delete old images
+      for (const oldImage of existingAnnouncement.images) {
+        if (oldImage) {
+          await deleteImageFromBlob(oldImage);
+        }
+      }
+      //upload new images
+      for (const image of [mainImage, otherImage1, otherImage2]) {
+        if (image) {
+          const blob = await uploadImageToBlob(image);
+          newImages.push(blob.url);
+        }
+      }
+      //update announcement
+      const updatedAnnouncement = await prisma.announcement.update({
+        where: { id },
+        data: {
+          title,
+          description,
+          price,
+          images: newImages,
+        },
+      });
+
+      return NextResponse.json(updatedAnnouncement);
+    }
+    return NextResponse.json({ error: "Announcement not found" }, { status: 404 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Update failed" }, { status: 500 });

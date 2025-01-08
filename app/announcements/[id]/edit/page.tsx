@@ -37,8 +37,6 @@ export default function EditAnnouncementPage(props: { params: Params }) {
       try {
         const response = await fetch(`/api/announcement/${params.id}`)
         const data = await response.json();
-        console.log("response", response);
-        console.log("data", data);
 
         setValue("title", data.title);
         setValue("description", data.description);
@@ -56,6 +54,9 @@ export default function EditAnnouncementPage(props: { params: Params }) {
             }))
           );
         }
+        setValue("mainImage", data.images.mainImage);
+        setValue("otherImage1", data.images.otherImages[0]);
+        setValue("otherImage2", data.images.otherImages[1]);
       } catch (error) {
         console.error("Erreur lors du chargement de l'annonce:", error);
       }
@@ -124,7 +125,6 @@ export default function EditAnnouncementPage(props: { params: Params }) {
 
   return (
     <form
-      action=""
       method="post"
       onSubmit={onSubmit}
       encType="multipart/form-data"

@@ -13,9 +13,9 @@ export async function deleteImageFromBlob(url: string) {
   await del(url)
 }
 
-export async function listImagesInBlob(folder: string = 'images') {
+export async function listImagesInBlob() {
   const { blobs } = await list({ 
-    prefix: folder,
+    prefix: 'announcements',
     limit: 100 
   })
   return blobs

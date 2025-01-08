@@ -16,7 +16,6 @@ export async function POST(request: Request) {
   const images: string[] = [];
 
   try {
-    // Traiter toutes les images
     for (const image of [mainImage, otherImage1, otherImage2]) {
       if (image) {
         const blob = await uploadImageToBlob(image);
@@ -32,7 +31,9 @@ export async function POST(request: Request) {
         images
       },
     });
+
     return NextResponse.json(announcement);
+    
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Creation failed" }, { status: 500 });
