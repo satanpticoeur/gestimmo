@@ -98,7 +98,6 @@ function InputMainImg({ register, errors, existingImage }: InputMainImgComponent
                   <Input
                     id="file-upload"
                     type="file"
-                    value={existingImage || ""}
                     accept="image/png, image/jpeg"
                     className={`sr-only`}
                     {...register}
