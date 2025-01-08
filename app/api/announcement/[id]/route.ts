@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import path from "path";
 import fs from "fs";
+import { deleteImageFromBlob } from "@/lib/blob";
 
 type Params = Promise<{ id: string }>;
 
@@ -36,23 +37,19 @@ export async function DELETE(
 ) {
   const params = await segmentData.params;
   const id = params.id;
-  const announcement = await prisma.announcement.delete({
+  const announcement = await prisma.announcement.findUnique({
     where: { id },
   });
 
   if (announcement) {
-    const imagePath1 = announcement.images[0]
-    const imagePath2 = announcement.images[1]
-    const imagePath3 = announcement.images[2]
-    if (imagePath1) {
-      fs.unlinkSync(path.join(process.cwd(), "public", imagePath1));
+    for (const image of announcement.images) {
+      if (image) {
+        await deleteImageFromBlob(image);
+      }
     }
-    if (imagePath2) {
-      fs.unlinkSync(path.join(process.cwd(), "public", imagePath2));
-    }
-    if (imagePath3) {
-      fs.unlinkSync(path.join(process.cwd(), "public", imagePath3));
-    }
+    await prisma.announcement.delete({
+      where: { id },
+    });
   }
 
   return NextResponse.json(announcement);
