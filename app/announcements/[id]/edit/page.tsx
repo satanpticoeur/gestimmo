@@ -51,10 +51,6 @@ export default function EditAnnouncementPage(props: { params: Params }) {
           otherImages: data.images.otherImages || [],
         });
 
-        if (data.images.mainImage) {
-          setInputImages([{ id: crypto.randomUUID() }]);
-        }
-
         if (data.images.otherImages?.length > 0) {
           setInputImages(
             data.images.otherImages.map(() => ({
