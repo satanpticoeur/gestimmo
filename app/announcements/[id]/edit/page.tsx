@@ -47,19 +47,12 @@ export default function EditAnnouncementPage(props: { params: Params }) {
           otherImages: data.images.otherImages || [],
         });
 
-        if (data.images.mainImage) {
-          setInputImages([{ id: crypto.randomUUID() }]);
-          setValue("mainImage", data.images.mainImage);
-        }
-
         if (data.images.otherImages?.length > 0) {
           setInputImages(
             data.images.otherImages.map(() => ({
               id: crypto.randomUUID(),
             }))
           );
-          setValue("otherImage1", data.images.otherImages[0]);
-          setValue("otherImage2", data.images.otherImages[1]);
         }
         
       } catch (error) {
@@ -190,6 +183,7 @@ export default function EditAnnouncementPage(props: { params: Params }) {
                           )}
                           <input
                             type="file"
+                            value={existingImages.otherImages[index]}
                             accept="image/png, image/jpeg"
                             className={`border w-full ${
                               errors?.[otherImageKey] ? "border-red-500" : ""
