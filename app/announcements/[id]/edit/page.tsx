@@ -54,9 +54,7 @@ export default function EditAnnouncementPage(props: { params: Params }) {
             }))
           );
         }
-        setValue("mainImage", data.images.mainImage);
-        setValue("otherImage1", data.images.otherImages[0]);
-        setValue("otherImage2", data.images.otherImages[1]);
+        
       } catch (error) {
         console.error("Erreur lors du chargement de l'annonce:", error);
       }
