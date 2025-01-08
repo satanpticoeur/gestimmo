@@ -73,11 +73,13 @@ export default function AddAnnouncementPage() {
 
     if (response.ok) {
       reset();
-      toast.success("Announcement created successfully");
-      new Promise((resolve) => setTimeout(resolve, 1000));
-      router.push("/");
+      toast.success("Announcement created successfully", {
+        onClose: () => {
+          router.push("/");
+        }
+      });
     } else {
-      console.error("Erreur lors de la création de l'annonce");
+      toast.error("Failed to create announcement");
     }
   });
 

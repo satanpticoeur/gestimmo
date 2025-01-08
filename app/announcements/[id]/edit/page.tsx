@@ -45,11 +45,6 @@ export default function EditAnnouncementPage(props: { params: Params }) {
         setValue("title", data.title);
         setValue("description", data.description);
         setValue("price", data.price);
-        console.log(data.images.mainImage);
-        
-        // setValue("mainImage", data.images.mainImage);
-        // setValue("otherImage1", data.images.otherImages[0]);
-        // setValue("otherImage2", data.images.otherImages[1]);
 
 
 
@@ -124,11 +119,12 @@ export default function EditAnnouncementPage(props: { params: Params }) {
       });
 
       if (response.ok) {
-        toast.success("Announcement updated successfully");
-        new Promise((resolve) => setTimeout(resolve, 1000));
-        router.push(`/announcements/${params.id}`);
+        toast.success("Announcement updated successfully", {
+          onClose: () => {
+            router.push(`/announcements/${params.id}`);
+          }
+        });
       } else {
-        console.error("Erreur lors de la mise à jour de l'annonce:", response);
         toast.error("Failed to update announcement");
       }
     } catch (error) {
