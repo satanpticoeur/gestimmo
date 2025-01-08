@@ -74,36 +74,42 @@ export async function PUT(request: Request, segmentData: { params: Params }) {
         images: true,
       },
     });
-    //new images array
     const newImages: string[] = [];
 
     if (existingAnnouncement) {
-      let indice = 0;
-      const oldImagesArray = existingAnnouncement.images;
-      const newImagesArray = [mainImage, otherImage1, otherImage2].filter(Boolean) as File[]; 
-
-      for (const oldImage of oldImagesArray) {
-        //https://url.com/image.jpg
-          if (oldImage && newImagesArray[indice]) {
-          //c://chemin/image.jpg
-          await deleteImageFromBlob(oldImage);
-          const blob = await uploadImageToBlob(newImagesArray[indice]);
-          newImages.push(blob.url);
-
-          } else if (!oldImage && newImagesArray[indice]) {
-            const blob = await uploadImageToBlob(newImagesArray[indice]);
-            newImages.push(blob.url);
-          }
-        indice++;
+      // Gérer l'image principale
+      if (mainImage) {
+        if (existingAnnouncement.images[0]) {
+          await deleteImageFromBlob(existingAnnouncement.images[0]);
+        }
+        const blob = await uploadImageToBlob(mainImage);
+        newImages.push(blob.url);
+      } else if (existingAnnouncement.images[0]) {
+        newImages.push(existingAnnouncement.images[0]);
       }
-      //upload new images
-      // for (const image of newImagesArray) {
-      //   if (image) {
-      //     const blob = await uploadImageToBlob(image as File);
-      //     newImages.push(blob.url);
-      //   }
-      // }
-      //update announcement
+
+      // Gérer la première image secondaire
+      if (otherImage1) {
+        if (existingAnnouncement.images[1]) {
+          await deleteImageFromBlob(existingAnnouncement.images[1]);
+        }
+        const blob = await uploadImageToBlob(otherImage1);
+        newImages.push(blob.url);
+      } else if (existingAnnouncement.images[1]) {
+        newImages.push(existingAnnouncement.images[1]);
+      }
+
+      // Gérer la deuxième image secondaire
+      if (otherImage2) {
+        if (existingAnnouncement.images[2]) {
+          await deleteImageFromBlob(existingAnnouncement.images[2]);
+        }
+        const blob = await uploadImageToBlob(otherImage2);
+        newImages.push(blob.url);
+      } else if (existingAnnouncement.images[2]) {
+        newImages.push(existingAnnouncement.images[2]);
+      }
+
       const updatedAnnouncement = await prisma.announcement.update({
         where: { id },
         data: {
