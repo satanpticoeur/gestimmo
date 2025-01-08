@@ -80,8 +80,10 @@ export async function PUT(request: Request, segmentData: { params: Params }) {
     if (existingAnnouncement) {
       //delete old images
       for (const oldImage of existingAnnouncement.images) {
-        if (oldImage) {
-          await deleteImageFromBlob(oldImage);
+        for (const newImage of [mainImage, otherImage1, otherImage2]) {
+          if (newImage?.name === oldImage) {
+            await deleteImageFromBlob(oldImage);
+          }
         }
       }
       //upload new images
@@ -104,7 +106,10 @@ export async function PUT(request: Request, segmentData: { params: Params }) {
 
       return NextResponse.json(updatedAnnouncement);
     }
-    return NextResponse.json({ error: "Announcement not found" }, { status: 404 });
+    return NextResponse.json(
+      { error: "Announcement not found" },
+      { status: 404 }
+    );
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
