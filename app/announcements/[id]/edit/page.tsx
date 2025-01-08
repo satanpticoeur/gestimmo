@@ -45,6 +45,11 @@ export default function EditAnnouncementPage(props: { params: Params }) {
         setValue("title", data.title);
         setValue("description", data.description);
         setValue("price", data.price);
+        setValue("mainImage", data.images.mainImage);
+        setValue("otherImage1", data.images.otherImages[0]);
+        setValue("otherImage2", data.images.otherImages[1]);
+
+
 
         setExistingImages({
           mainImage: data.images.mainImage || "",
