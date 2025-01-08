@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { deleteImageFromBlob, uploadImageToBlob } from "@/lib/blob";
+import { deleteImageFromBlob } from "@/lib/blob";
 
 type Params = Promise<{ id: string }>;
 
@@ -58,9 +58,9 @@ export async function PUT(request: Request, segmentData: { params: Params }) {
   const id = params.id;
   const formData = await request.formData();
 
-  const title = formData.get("title") as string;
-  const description = formData.get("description") as string;
-  const price = Number(formData.get("price"));
+  // const title = formData.get("title") as string;
+  // const description = formData.get("description") as string;
+  // const price = Number(formData.get("price"));
 
   //new images
   const mainImage = formData.get("mainImage") as File | null;
@@ -75,36 +75,45 @@ export async function PUT(request: Request, segmentData: { params: Params }) {
       },
     });
     //new images array
-    const newImages: string[] = [];
+    // const newImages: string[] = [];
 
     if (existingAnnouncement) {
       //delete old images
       for (const oldImage of existingAnnouncement.images) {
+        if (oldImage) {
         for (const newImage of [mainImage, otherImage1, otherImage2]) {
-          if (newImage?.name === oldImage) {
-            await deleteImageFromBlob(oldImage);
+          if (newImage && newImage.name === oldImage) {
+            console.log("oldImage", oldImage);
+            console.log("is the same as");            
+            console.log("newImage", newImage);
+            // await deleteImageFromBlob(oldImage);
+          }else{
+            console.log("oldImage", oldImage);
+            console.log("is not the same as");            
+            console.log("newImage", newImage);
+          }
           }
         }
       }
-      //upload new images
-      for (const image of [mainImage, otherImage1, otherImage2]) {
-        if (image) {
-          const blob = await uploadImageToBlob(image);
-          newImages.push(blob.url);
-        }
-      }
-      //update announcement
-      const updatedAnnouncement = await prisma.announcement.update({
-        where: { id },
-        data: {
-          title,
-          description,
-          price,
-          images: newImages,
-        },
-      });
+      // //upload new images
+      // for (const image of [mainImage, otherImage1, otherImage2]) {
+      //   if (image) {
+      //     const blob = await uploadImageToBlob(image);
+      //     newImages.push(blob.url);
+      //   }
+      // }
+      // //update announcement
+      // const updatedAnnouncement = await prisma.announcement.update({
+      //   where: { id },
+      //   data: {
+      //     title,
+      //     description,
+      //     price,
+      //     images: newImages,
+      //   },
+      // });
 
-      return NextResponse.json(updatedAnnouncement);
+      return NextResponse.json({ message: "Announcement updated" });
     }
     return NextResponse.json(
       { error: "Announcement not found" },
