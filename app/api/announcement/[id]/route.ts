@@ -77,37 +77,16 @@ export async function PUT(request: Request, segmentData: { params: Params }) {
     const newImages: string[] = [];
 
     if (existingAnnouncement) {
-      // Gérer l'image principale
-      if (mainImage) {
-        if (existingAnnouncement.images[0]) {
-          await deleteImageFromBlob(existingAnnouncement.images[0]);
+      let indice = 0;
+      for (const newImage of [mainImage, otherImage1, otherImage2]) {
+        if (newImage && newImage !== null && newImage !== undefined) {
+          if (existingAnnouncement.images[indice]) {
+            await deleteImageFromBlob(existingAnnouncement.images[indice]);
+          }
+          const blob = await uploadImageToBlob(newImage);
+          newImages.push(blob.url);
         }
-        const blob = await uploadImageToBlob(mainImage);
-        newImages.push(blob.url);
-      } else if (existingAnnouncement.images[0]) {
-        newImages.push(existingAnnouncement.images[0]);
-      }
-
-      // Gérer la première image secondaire
-      if (otherImage1) {
-        if (existingAnnouncement.images[1]) {
-          await deleteImageFromBlob(existingAnnouncement.images[1]);
-        }
-        const blob = await uploadImageToBlob(otherImage1);
-        newImages.push(blob.url);
-      } else if (existingAnnouncement.images[1]) {
-        newImages.push(existingAnnouncement.images[1]);
-      }
-
-      // Gérer la deuxième image secondaire
-      if (otherImage2) {
-        if (existingAnnouncement.images[2]) {
-          await deleteImageFromBlob(existingAnnouncement.images[2]);
-        }
-        const blob = await uploadImageToBlob(otherImage2);
-        newImages.push(blob.url);
-      } else if (existingAnnouncement.images[2]) {
-        newImages.push(existingAnnouncement.images[2]);
+        indice++;
       }
 
       const updatedAnnouncement = await prisma.announcement.update({
