@@ -61,11 +61,11 @@ export default function EditAnnouncementPage(props: { params: Params }) {
         
       } catch (error) {
         console.error("Erreur lors du chargement de l'annonce:", error);
+        router.push("/announcements");
       }
     };
 
     if (params.id) {
-      console.log("fetching", params.id);
       fetchAnnouncement();
     }
   }, [params.id, setValue]);
@@ -187,7 +187,6 @@ export default function EditAnnouncementPage(props: { params: Params }) {
                           )}
                           <input
                             type="file"
-                            value={existingImages.otherImages[index]}
                             accept="image/png, image/jpeg"
                             className={`border w-full ${
                               errors?.[otherImageKey] ? "border-red-500" : ""

@@ -2,6 +2,8 @@
 
 import { AnnouncementList } from "@/components/announcement/AnnouncementList";
 import { useEffect, useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Announcement {
   id: string;
@@ -39,11 +41,14 @@ export default function Home() {
       });
       if (response.ok) {
         setAnnouncements(announcements.filter(announcement => announcement.id !== id));
+        toast.success('Announcement deleted successfully');
       } else {
         console.error('Erreur lors de la suppression:', response.statusText);
+        toast.error('Failed to delete announcement');
       }
     } catch (error) {
-      console.error('Erreur lors de la suppression:', error);
+      console.error('Erreur lors de la suppression:', error);   
+      toast.error('Failed to delete announcement');
     }
   };
 
@@ -74,6 +79,7 @@ export default function Home() {
   return (
     <div className="w-full">
       <AnnouncementList announcements={announcements} onDelete={handleDelete} />
+      <ToastContainer />
     </div>
   );
 }
