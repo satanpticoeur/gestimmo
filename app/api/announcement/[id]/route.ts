@@ -85,6 +85,8 @@ export async function PUT(request: Request, segmentData: { params: Params }) {
           }
           const blob = await uploadImageToBlob(newImage);
           newImages.push(blob.url);
+        } else {
+          newImages.push(existingAnnouncement.images[indice]);
         }
         indice++;
       }
