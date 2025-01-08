@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import path from "path";
-import fs from "fs";
+import { uploadImageToBlob } from "@/lib/blob";
 
 export async function POST(request: Request) {
   const formData = await request.formData();
@@ -14,22 +13,14 @@ export async function POST(request: Request) {
   const otherImage1 = formData.get("otherImage1") as File;
   const otherImage2 = formData.get("otherImage2") as File;
 
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-  }
-
   const images: string[] = [];
 
   try {
     // Traiter toutes les images
     for (const image of [mainImage, otherImage1, otherImage2]) {
       if (image) {
-        const buffer = Buffer.from(await image.arrayBuffer());
-        const fileName = `${Date.now()}-${image.name.replace(/[^a-zA-Z0-9.-]/g, "-")}`;
-        const filePath = path.join(uploadDir, fileName);
-        fs.writeFileSync(filePath, buffer);
-        images.push(`/uploads/${fileName}`);
+        const blob = await uploadImageToBlob(image);
+        images.push(blob.url);
       }
     }
 

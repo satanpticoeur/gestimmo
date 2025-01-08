@@ -19,6 +19,7 @@ export default function Home() {
     try {
       const response = await fetch(`/api/announcement`);
       const data = await response.json();
+      console.log("data", data);
       setAnnouncements(data);
     } catch (error) {
       console.error("Error fetching announcements:", error);
