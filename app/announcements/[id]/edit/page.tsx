@@ -47,12 +47,19 @@ export default function EditAnnouncementPage(props: { params: Params }) {
           otherImages: data.images.otherImages || [],
         });
 
+        if (data.images.mainImage) {
+          setInputImages([{ id: crypto.randomUUID() }]);
+          setValue("mainImage", data.images.mainImage);
+        }
+
         if (data.images.otherImages?.length > 0) {
           setInputImages(
             data.images.otherImages.map(() => ({
               id: crypto.randomUUID(),
             }))
           );
+          setValue("otherImage1", data.images.otherImages[0]);
+          setValue("otherImage2", data.images.otherImages[1]);
         }
         
       } catch (error) {
