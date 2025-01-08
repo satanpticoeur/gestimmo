@@ -13,12 +13,14 @@ import { announcementSchema } from "@/yup/schema";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loader from "@/components/Loader";
 type Params = Promise<{ id: string }>;
 
 export default function EditAnnouncementPage(props: { params: Params }) {
   const router = useRouter();
   const params = use(props.params);
 
+  const [isLoading, setIsLoading] = useState(true);
   const [inputImages, setInputImages] = useState<Array<{ id: string }>>([]);
   const [existingImages, setExistingImages] = useState({
     mainImage: "",
@@ -63,6 +65,8 @@ export default function EditAnnouncementPage(props: { params: Params }) {
       } catch (error) {
         console.error("Erreur lors du chargement de l'annonce:", error);
         toast.error("Failed to load announcement");
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -117,8 +121,9 @@ export default function EditAnnouncementPage(props: { params: Params }) {
       });
 
       if (response.ok) {
-        router.push(`/announcements/${params.id}`);
         toast.success("Announcement updated successfully");
+        new Promise((resolve) => setTimeout(resolve, 1000));
+        router.push(`/announcements/${params.id}`);
       } else {
         console.error("Erreur lors de la mise à jour de l'annonce:", response);
         toast.error("Failed to update announcement");
@@ -128,6 +133,8 @@ export default function EditAnnouncementPage(props: { params: Params }) {
       toast.error("Failed to update announcement");
     }
   });
+  if (isLoading) return <Loader />;
+
 
   return (
     <>

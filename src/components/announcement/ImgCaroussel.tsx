@@ -53,8 +53,8 @@ export function ImgCarousel({
       // Mettre à jour currentImage avec l'index actuel du carousel
       const selectedIndex = api.selectedScrollSnap();
       const selectedImage =
-        images.otherImages[selectedIndex] ||
         images.mainImage ||
+        images.otherImages[selectedIndex] ||
         "/images/placeholder.png";
       setCurrentImage(selectedImage);
     });
@@ -80,28 +80,30 @@ export function ImgCarousel({
               onMouseEnter={plugin.current.stop}
               onMouseLeave={plugin.current.reset}
               setApi={setApi}
-          >
-            <CarouselContent>
-              {[...images.otherImages, images.mainImage].map((image, index) => (
-                <CarouselItem key={index} className="">
-                  <div className="p-1">
-                    <Card>
-                      <CardContent className="flex aspect-square items-center justify-center p-6">
-                        <Image
-                          src={image || ""}
-                          alt="announcement"
-                          width={500}
-                          height={500}
-                          className="object-cover w-full h-full"
-                        />
-                      </CardContent>
-                    </Card>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
+            >
+              <CarouselContent>
+                {[...images.otherImages, images.mainImage].map(
+                  (image, index) => (
+                    <CarouselItem key={index} className="">
+                      <div className="p-1">
+                        <Card>
+                          <CardContent className="flex aspect-square items-center justify-center p-6">
+                            <Image
+                              src={image || ""}
+                              alt="announcement"
+                              width={500}
+                              height={500}
+                              className="object-cover w-full h-full"
+                            />
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </CarouselItem>
+                  )
+                )}
+              </CarouselContent>
 
-            <CarouselPrevious />
+              <CarouselPrevious />
               <CarouselNext />
             </Carousel>
           )}

@@ -6,10 +6,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
 import { announcementSchema } from "@/yup/schema";
 import FormInput from "@/components/announcement/Form-Input";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function AddAnnouncementPage() {
   const router = useRouter();
   const [inputImages, setInputImages] = useState<Array<{ id: string }>>([]);
+
 
   const handleAddImage = () => {
     const otherImages = document.getElementById("other-images");
@@ -71,6 +73,8 @@ export default function AddAnnouncementPage() {
 
     if (response.ok) {
       reset();
+      toast.success("Announcement created successfully");
+      new Promise((resolve) => setTimeout(resolve, 1000));
       router.push("/");
     } else {
       console.error("Erreur lors de la création de l'annonce");
@@ -87,6 +91,7 @@ export default function AddAnnouncementPage() {
         errors={errors}
         inputImages={inputImages}
       />
+      <ToastContainer />
     </>
   );
 }
