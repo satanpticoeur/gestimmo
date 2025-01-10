@@ -4,7 +4,6 @@ import Autoplay from "embla-carousel-autoplay";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -17,6 +16,9 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Image from "next/image";
+import Link from "next/link";
+import { Button } from "../ui/button";
+import { Pencil } from "lucide-react";
 
 interface Announcement {
   id: string;
@@ -38,8 +40,8 @@ export function ImgCarousel({
   };
   announcement: Announcement | undefined;
 }) {
-  const imageArray = React.useMemo(() => 
-    [images.mainImage, ...images.otherImages],
+  const imageArray = React.useMemo(
+    () => [images.mainImage, ...images.otherImages],
     [images.mainImage, images.otherImages]
   );
 
@@ -47,14 +49,17 @@ export function ImgCarousel({
     Autoplay({ delay: 5000, stopOnInteraction: false })
   );
   const [api, setApi] = React.useState<CarouselApi>();
-  const [currentImage, setCurrentImage] = React.useState(imageArray[0] || "/images/placeholder.png");
+  const [currentImage, setCurrentImage] = React.useState(
+    imageArray[0] || "/images/placeholder.png"
+  );
 
   React.useEffect(() => {
     if (!api) return;
 
     api.on("select", () => {
       const selectedIndex = api.selectedScrollSnap();
-      const selectedImage = imageArray[selectedIndex] || "/images/placeholder.png";
+      const selectedImage =
+        imageArray[selectedIndex] || "/images/placeholder.png";
       setCurrentImage(selectedImage);
     });
   }, [api, imageArray]);
@@ -71,7 +76,7 @@ export function ImgCarousel({
             className="object-cover w-full h-full"
           />
         </div>
-        <div className="flex justify-between gap-16">
+        <div className="flex flex-col sm:flex-row justify-between gap-16">
           {images.otherImages.length > 0 && (
             <Carousel
               className="w-full max-w-32 ml-12"
@@ -107,11 +112,18 @@ export function ImgCarousel({
             </Carousel>
           )}
           <Card className="flex-1">
-            <CardHeader>
-              <CardTitle>{announcement?.title}</CardTitle>
-              <CardDescription className="text-2xl font-bold text-indigo-500">
-                {announcement?.price}€
-              </CardDescription>
+            <CardHeader className="flex-row justify-between">
+              <>
+                <CardTitle>{announcement?.title}</CardTitle>
+                <span className="text-2xl font-bold text-indigo-500">
+                  {announcement?.price}€
+                </span>
+              </>
+              <Link href={`/announcement/${announcement?.id}/edit`}>
+                <Button variant="outline">
+                  <Pencil />
+                </Button>
+              </Link>
             </CardHeader>
             <CardContent>
               <p>{announcement?.description}</p>
