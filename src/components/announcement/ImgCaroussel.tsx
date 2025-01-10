@@ -76,7 +76,7 @@ export function ImgCarousel({
             className="object-cover w-full h-full"
           />
         </div>
-        <div className="flex flex-col sm:flex-row justify-between gap-16">
+        <div className="flex flex-col justify-between gap-16 sm:flex-row sm:gap-4">
           {images.otherImages.length > 0 && (
             <Carousel
               className="w-full max-w-32 ml-12"
@@ -113,12 +113,12 @@ export function ImgCarousel({
           )}
           <Card className="flex-1">
             <CardHeader className="flex-row justify-between">
-              <>
+              <div className="flex flex-col gap-2">
                 <CardTitle>{announcement?.title}</CardTitle>
                 <span className="text-2xl font-bold text-indigo-500">
                   {announcement?.price}€
                 </span>
-              </>
+              </div>
               <Link href={`/announcement/${announcement?.id}/edit`}>
                 <Button variant="outline">
                   <Pencil />
