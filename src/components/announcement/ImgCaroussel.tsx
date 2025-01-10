@@ -119,7 +119,7 @@ export function ImgCarousel({
                   {announcement?.price}€
                 </span>
               </div>
-              <Link href={`/announcement/${announcement?.id}/edit`}>
+              <Link href={`/announcements/${announcement?.id}/edit`}>
                 <Button variant="outline">
                   <Pencil />
                 </Button>
@@ -128,7 +128,7 @@ export function ImgCarousel({
             <CardContent>
               <p>{announcement?.description}</p>
             </CardContent>
-          </Card>{" "}
+          </Card>
         </div>
       </div>
     </main>
