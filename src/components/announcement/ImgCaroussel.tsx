@@ -38,27 +38,26 @@ export function ImgCarousel({
   };
   announcement: Announcement | undefined;
 }) {
+  const imageArray = React.useMemo(() => 
+    [images.mainImage, ...images.otherImages],
+    [images.mainImage, images.otherImages]
+  );
+
   const plugin = React.useRef(
     Autoplay({ delay: 5000, stopOnInteraction: false })
   );
   const [api, setApi] = React.useState<CarouselApi>();
-  const [currentImage, setCurrentImage] = React.useState(
-    images.mainImage || images.otherImages[0] || images.otherImages[1] || "/images/placeholder.png"
-  );
+  const [currentImage, setCurrentImage] = React.useState(imageArray[0] || "/images/placeholder.png");
 
   React.useEffect(() => {
     if (!api) return;
 
     api.on("select", () => {
-      // Mettre à jour currentImage avec l'index actuel du carousel
       const selectedIndex = api.selectedScrollSnap();
-      const selectedImage =
-      images.otherImages[selectedIndex] ||
-        images.mainImage ||
-        "/images/placeholder.png";
+      const selectedImage = imageArray[selectedIndex] || "/images/placeholder.png";
       setCurrentImage(selectedImage);
     });
-  }, [api, images]);
+  }, [api, imageArray]);
 
   return (
     <main className="h-screen max-[812px]:p-4">
