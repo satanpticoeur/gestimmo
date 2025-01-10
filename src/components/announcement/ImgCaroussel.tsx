@@ -76,7 +76,7 @@ export function ImgCarousel({
             className="object-cover w-full h-full"
           />
         </div>
-        <div className="flex flex-col justify-between gap-16 sm:flex-row sm:gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:gap-16 sm:justify-between">
           {images.otherImages.length > 0 && (
             <Carousel
               className="w-full max-w-32 ml-12"
