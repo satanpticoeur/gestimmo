@@ -43,7 +43,7 @@ export function ImgCarousel({
   );
   const [api, setApi] = React.useState<CarouselApi>();
   const [currentImage, setCurrentImage] = React.useState(
-    images.mainImage || "/images/placeholder.png"
+    images.mainImage || images.otherImages[0] || images.otherImages[1] || "/images/placeholder.png"
   );
 
   React.useEffect(() => {
@@ -53,8 +53,8 @@ export function ImgCarousel({
       // Mettre à jour currentImage avec l'index actuel du carousel
       const selectedIndex = api.selectedScrollSnap();
       const selectedImage =
+      images.otherImages[selectedIndex] ||
         images.mainImage ||
-        images.otherImages[selectedIndex] ||
         "/images/placeholder.png";
       setCurrentImage(selectedImage);
     });
